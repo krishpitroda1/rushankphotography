@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Diagnostic Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-section {
+            margin: 15px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        .warning { background: #fff3cd; border-color: #ffeaa7; }
+        .info { background: #d1ecf1; border-color: #bee5eb; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .danger { background: #dc3545; }
+        .danger:hover { background: #c82333; }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow: auto;
+            font-size: 12px;
+            max-height: 200px;
+        }
+        .step {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Firebase Diagnostic Tool</h1>
+        <p>This tool will help us identify exactly what's wrong with your Firebase setup.</p>
+        
+        <div class="test-section info">
+            <h3>📋 Current Configuration</h3>
+            <p><strong>Project ID:</strong> rushankproject</p>
+            <p><strong>API Key:</strong> AIzaSyAx4HEK8E353Dm9vu2fDBzqyQxivIYE5wk</p>
+            <p><strong>Auth Domain:</strong> rushankproject.firebaseapp.com</p>
+        </div>
+        
+        <div id="results"></div>
+        
+        <div class="test-section">
+            <h3>🧪 Diagnostic Tests</h3>
+            <button onclick="runAllTests()">🚀 Run All Tests</button>
+            <button onclick="testFirebaseInit()">1️⃣ Test Firebase Init</button>
+            <button onclick="testFirestoreRead()">2️⃣ Test Firestore Read</button>
+            <button onclick="testFirestoreWrite()">3️⃣ Test Firestore Write</button>
+            <button onclick="testProjectCreation()">4️⃣ Test Project Creation</button>
+            <button onclick="clearResults()">🗑️ Clear Results</button>
+        </div>
+        
+        <div class="test-section warning">
+            <h3>⚠️ Common Issues & Solutions</h3>
+            <div class="step">
+                <strong>Issue 1:</strong> Firestore not created<br>
+                <strong>Solution:</strong> Go to Firebase Console → Firestore Database → Create database
+            </div>
+            <div class="step">
+                <strong>Issue 2:</strong> Security rules too restrictive<br>
+                <strong>Solution:</strong> Set rules to: <code>allow read, write: if true;</code>
+            </div>
+            <div class="step">
+                <strong>Issue 3:</strong> Wrong project ID<br>
+                <strong>Solution:</strong> Verify project ID in Firebase Console
+            </div>
+            <div class="step">
+                <strong>Issue 4:</strong> Network/firewall blocking<br>
+                <strong>Solution:</strong> Check internet connection and firewall settings
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, getDocs, addDoc, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAx4HEK8E353Dm9vu2fDBzqyQxivIYE5wk",
+            authDomain: "rushankproject.firebaseapp.com",
+            projectId: "rushankproject",
+            storageBucket: "rushankproject.firebasestorage.app",
+            messagingSenderId: "413621295658",
+            appId: "1:413621295658:web:dcb1ac23963474d08f8153",
+            measurementId: "G-W5EHR2PEWH"
+        };
+
+        let app, db;
+        let testResults = [];
+
+        function addResult(message, type = 'info', details = '') {
+            const resultsDiv = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-section ${type}`;
+            div.innerHTML = `<p>${message}</p>${details ? `<pre>${details}</pre>` : ''}`;
+            resultsDiv.appendChild(div);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+            
+            testResults.push({ message, type, details, timestamp: new Date() });
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+            testResults = [];
+        }
+
+        async function testFirebaseInit() {
+            addResult('🔥 Testing Firebase initialization...', 'info');
+            
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                addResult('✅ Firebase initialized successfully!', 'success');
+                return true;
+            } catch (error) {
+                addResult(`❌ Firebase initialization failed: ${error.message}`, 'error', error.stack);
+                return false;
+            }
+        }
+
+        async function testFirestoreRead() {
+            if (!db) {
+                addResult('❌ Firebase not initialized. Run test 1 first.', 'error');
+                return false;
+            }
+
+            addResult('📖 Testing Firestore read access...', 'info');
+            
+            try {
+                const projectsRef = collection(db, 'projects');
+                const snapshot = await getDocs(projectsRef);
+                
+                addResult(`✅ Read test successful! Found ${snapshot.size} projects`, 'success');
+                
+                if (snapshot.size > 0) {
+                    const projects = [];
+                    snapshot.forEach(doc => {
+                        projects.push({ id: doc.id, ...doc.data() });
+                    });
+                    addResult('📋 Existing projects:', 'info', JSON.stringify(projects, null, 2));
+                } else {
+                    addResult('📝 No projects found (this is normal for a new setup)', 'warning');
+                }
+                
+                return true;
+            } catch (error) {
+                addResult(`❌ Read test failed: ${error.message}`, 'error', `Code: ${error.code}\nStack: ${error.stack}`);
+                
+                if (error.code === 'permission-denied') {
+                    addResult('💡 Solution: Check your Firestore security rules', 'warning');
+                } else if (error.code === 'unavailable') {
+                    addResult('💡 Solution: Check your internet connection', 'warning');
+                } else if (error.code === 'not-found') {
+                    addResult('💡 Solution: Firestore database might not be created', 'warning');
+                }
+                
+                return false;
+            }
+        }
+
+        async function testFirestoreWrite() {
+            if (!db) {
+                addResult('❌ Firebase not initialized. Run test 1 first.', 'error');
+                return false;
+            }
+
+            addResult('✍️ Testing Firestore write access...', 'info');
+            
+            try {
+                const projectsRef = collection(db, 'projects');
+                const testData = {
+                    title: 'Diagnostic Test Project',
+                    description: 'This is a test project created by the diagnostic tool',
+                    category: 'test',
+                    image: 'https://via.placeholder.com/400x300',
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                };
+
+                const docRef = await addDoc(projectsRef, testData);
+                addResult(`✅ Write test successful! Document ID: ${docRef.id}`, 'success');
+                return true;
+                
+            } catch (error) {
+                addResult(`❌ Write test failed: ${error.message}`, 'error', `Code: ${error.code}\nStack: ${error.stack}`);
+                
+                if (error.code === 'permission-denied') {
+                    addResult('💡 Solution: Update Firestore security rules to allow writes', 'warning');
+                }
+                
+                return false;
+            }
+        }
+
+        async function testProjectCreation() {
+            if (!db) {
+                addResult('❌ Firebase not initialized. Run test 1 first.', 'error');
+                return false;
+            }
+
+            addResult('🎯 Testing complete project creation...', 'info');
+            
+            try {
+                const projectsRef = collection(db, 'projects');
+                const projectData = {
+                    title: 'Complete Test Project',
+                    description: 'This is a complete test project with all fields',
+                    category: 'Personal',
+                    image: 'https://images.unsplash.com/photo-1506905925346-14b5e4c4b6c4?w=400&h=500&fit=crop&crop=center',
+                    photos: [
+                        'https://images.unsplash.com/photo-1506905925346-14b5e4c4b6c4?w=800&h=600&fit=crop&crop=center',
+                        'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop&crop=center'
+                    ],
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                };
+
+                const docRef = await addDoc(projectsRef, projectData);
+                addResult(`✅ Project creation successful! Document ID: ${docRef.id}`, 'success');
+                
+                // Verify the project was created
+                const docSnap = await getDoc(doc(db, 'projects', docRef.id));
+                if (docSnap.exists()) {
+                    addResult('✅ Project verification successful!', 'success');
+                    addResult('📋 Created project data:', 'info', JSON.stringify(docSnap.data(), null, 2));
+                } else {
+                    addResult('⚠️ Project created but verification failed', 'warning');
+                }
+                
+                return true;
+                
+            } catch (error) {
+                addResult(`❌ Project creation failed: ${error.message}`, 'error', `Code: ${error.code}\nStack: ${error.stack}`);
+                return false;
+            }
+        }
+
+        async function runAllTests() {
+            clearResults();
+            addResult('🚀 Running complete diagnostic suite...', 'info');
+            
+            const results = [];
+            results.push(await testFirebaseInit());
+            results.push(await testFirestoreRead());
+            results.push(await testFirestoreWrite());
+            results.push(await testProjectCreation());
+            
+            const successCount = results.filter(r => r).length;
+            const totalTests = results.length;
+            
+            if (successCount === totalTests) {
+                addResult(`🎉 All tests passed! (${successCount}/${totalTests})`, 'success');
+                addResult('✅ Your Firebase setup is working correctly!', 'success');
+            } else {
+                addResult(`⚠️ Some tests failed (${successCount}/${totalTests})`, 'warning');
+                addResult('❌ There are issues with your Firebase setup that need to be resolved.', 'error');
+            }
+        }
+
+        // Make functions available globally
+        window.testFirebaseInit = testFirebaseInit;
+        window.testFirestoreRead = testFirestoreRead;
+        window.testFirestoreWrite = testFirestoreWrite;
+        window.testProjectCreation = testProjectCreation;
+        window.runAllTests = runAllTests;
+        window.clearResults = clearResults;
+
+        // Auto-run initial test
+        addResult('🚀 Starting automatic diagnostic...', 'info');
+        setTimeout(runAllTests, 1000);
+    </script>
+</body>
+</html>

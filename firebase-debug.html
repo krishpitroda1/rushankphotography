@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        .info { background: #d1ecf1; border-color: #bee5eb; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Firebase Debug Test</h1>
+        <p>This page will test your Firebase connection step by step.</p>
+        
+        <div id="results"></div>
+        
+        <div class="test-section">
+            <h3>Manual Tests</h3>
+            <button onclick="testFirebaseConnection()">🧪 Test Firebase Connection</button>
+            <button onclick="testFirestoreRead()">📖 Test Firestore Read</button>
+            <button onclick="testFirestoreWrite()">✍️ Test Firestore Write</button>
+            <button onclick="clearResults()">🗑️ Clear Results</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, getDocs, addDoc, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAx4HEK8E353Dm9vu2fDBzqyQxivIYE5wk",
+            authDomain: "rushankproject.firebaseapp.com",
+            projectId: "rushankproject",
+            storageBucket: "rushankproject.firebasestorage.app",
+            messagingSenderId: "413621295658",
+            appId: "1:413621295658:web:dcb1ac23963474d08f8153",
+            measurementId: "G-W5EHR2PEWH"
+        };
+
+        let app, db;
+
+        function addResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-section ${type}`;
+            div.innerHTML = `<p>${message}</p>`;
+            resultsDiv.appendChild(div);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        async function testFirebaseConnection() {
+            addResult('🔥 Testing Firebase initialization...', 'info');
+            
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                addResult('✅ Firebase initialized successfully!', 'success');
+                addResult(`📋 Project ID: ${firebaseConfig.projectId}`, 'info');
+                addResult(`🔑 API Key: ${firebaseConfig.apiKey.substring(0, 10)}...`, 'info');
+                return true;
+            } catch (error) {
+                addResult(`❌ Firebase initialization failed: ${error.message}`, 'error');
+                addResult(`Error code: ${error.code}`, 'error');
+                return false;
+            }
+        }
+
+        async function testFirestoreRead() {
+            if (!db) {
+                addResult('❌ Firebase not initialized. Run connection test first.', 'error');
+                return;
+            }
+
+            addResult('📖 Testing Firestore read access...', 'info');
+            
+            try {
+                const projectsRef = collection(db, 'projects');
+                const snapshot = await getDocs(projectsRef);
+                
+                addResult(`✅ Read test successful! Found ${snapshot.size} projects`, 'success');
+                
+                if (snapshot.size > 0) {
+                    const projects = [];
+                    snapshot.forEach(doc => {
+                        projects.push({ id: doc.id, ...doc.data() });
+                    });
+                    addResult(`📋 Projects: <pre>${JSON.stringify(projects, null, 2)}</pre>`, 'info');
+                } else {
+                    addResult('📝 No projects found in database (this is normal for a new setup)', 'info');
+                }
+                
+            } catch (error) {
+                addResult(`❌ Read test failed: ${error.message}`, 'error');
+                addResult(`Error code: ${error.code}`, 'error');
+                
+                if (error.code === 'permission-denied') {
+                    addResult('💡 Solution: Check your Firestore security rules', 'info');
+                } else if (error.code === 'unavailable') {
+                    addResult('💡 Solution: Check your internet connection', 'info');
+                }
+            }
+        }
+
+        async function testFirestoreWrite() {
+            if (!db) {
+                addResult('❌ Firebase not initialized. Run connection test first.', 'error');
+                return;
+            }
+
+            addResult('✍️ Testing Firestore write access...', 'info');
+            
+            try {
+                const projectsRef = collection(db, 'projects');
+                const testData = {
+                    title: 'Debug Test Project',
+                    description: 'This is a test project created by the debug tool',
+                    category: 'test',
+                    image: 'https://via.placeholder.com/400x300',
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                };
+
+                const docRef = await addDoc(projectsRef, testData);
+                addResult(`✅ Write test successful! Document ID: ${docRef.id}`, 'success');
+                addResult('📝 Test project created successfully', 'info');
+                
+            } catch (error) {
+                addResult(`❌ Write test failed: ${error.message}`, 'error');
+                addResult(`Error code: ${error.code}`, 'error');
+                
+                if (error.code === 'permission-denied') {
+                    addResult('💡 Solution: Check your Firestore security rules', 'info');
+                }
+            }
+        }
+
+        // Make functions available globally
+        window.testFirebaseConnection = testFirebaseConnection;
+        window.testFirestoreRead = testFirestoreRead;
+        window.testFirestoreWrite = testFirestoreWrite;
+        window.clearResults = clearResults;
+
+        // Auto-run initial test
+        addResult('🚀 Starting automatic Firebase test...', 'info');
+        setTimeout(async () => {
+            const connected = await testFirebaseConnection();
+            if (connected) {
+                await testFirestoreRead();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

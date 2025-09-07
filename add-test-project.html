@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Test Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover { background: #0056b3; }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Add Test Project to Firebase</h1>
+        <p>This will help us test if Firebase write operations work.</p>
+        
+        <form id="projectForm">
+            <div class="form-group">
+                <label for="title">Project Title:</label>
+                <input type="text" id="title" value="Test Project" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" rows="3">This is a test project to verify Firebase connection</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select id="category" required>
+                    <option value="Personal">Personal</option>
+                    <option value="Commissioned Work">Commissioned Work</option>
+                    <option value="Headshots">Headshots</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="image">Main Image URL:</label>
+                <input type="url" id="image" value="https://images.unsplash.com/photo-1506905925346-14b5e4c4b6c4?w=400&h=500&fit=crop&crop=center" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="photos">Additional Photos (one URL per line):</label>
+                <textarea id="photos" rows="3" placeholder="Enter image URLs, one per line">https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop&crop=center
+https://images.unsplash.com/photo-1506905925346-14b5e4c4b6c4?w=800&h=600&fit=crop&crop=center</textarea>
+            </div>
+            
+            <button type="submit">🚀 Add Project to Firebase</button>
+            <button type="button" onclick="testConnection()">🧪 Test Connection</button>
+        </form>
+        
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAx4HEK8E353Dm9vu2fDBzqyQxivIYE5wk",
+            authDomain: "rushankproject.firebaseapp.com",
+            projectId: "rushankproject",
+            storageBucket: "rushankproject.firebasestorage.app",
+            messagingSenderId: "413621295658",
+            appId: "1:413621295658:web:dcb1ac23963474d08f8153",
+            measurementId: "G-W5EHR2PEWH"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        function showResult(message, isError = false) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = `result ${isError ? 'error' : 'success'}`;
+            resultDiv.innerHTML = message;
+        }
+
+        async function testConnection() {
+            showResult('🧪 Testing Firebase connection...', false);
+            
+            try {
+                const projectsRef = collection(db, 'projects');
+                const snapshot = await getDocs(projectsRef);
+                showResult(`✅ Connection successful! Found ${snapshot.size} existing projects.`, false);
+            } catch (error) {
+                showResult(`❌ Connection failed: ${error.message}`, true);
+            }
+        }
+
+        document.getElementById('projectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const category = document.getElementById('category').value;
+            const image = document.getElementById('image').value;
+            const photos = document.getElementById('photos').value
+                .split('\n')
+                .filter(url => url.trim() !== '');
+            
+            showResult('🚀 Adding project to Firebase...', false);
+            
+            try {
+                const projectsRef = collection(db, 'projects');
+                const projectData = {
+                    title,
+                    description,
+                    category,
+                    image,
+                    photos,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                };
+                
+                const docRef = await addDoc(projectsRef, projectData);
+                showResult(`✅ Project added successfully!<br>Document ID: ${docRef.id}<br><br>Now refresh your admin panel to see the new project.`, false);
+                
+                // Clear form
+                document.getElementById('projectForm').reset();
+                
+            } catch (error) {
+                showResult(`❌ Failed to add project: ${error.message}<br><br>Error code: ${error.code}`, true);
+            }
+        });
+
+        // Test connection on page load
+        window.addEventListener('load', testConnection);
+    </script>
+</body>
+</html>

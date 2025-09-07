@@ -1,0 +1,39 @@
+.mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.98);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid #333;
+  padding: 20px;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mobile-menu a {
+  color: #ccc;
+  font-weight: 400;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+  padding: 10px 0;
+  border-bottom: 1px solid #333;
+}
+
+.mobile-menu a:hover,
+.mobile-menu a.active {
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu {
+    display: flex;
+  }
+  
+  .nav {
+    display: none;
+  }
+}
