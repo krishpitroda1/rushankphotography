@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAllProjects, addProject, updateProject, deleteProject } from '../firebase/projectService';
+import ImageUrlHelper from './ImageUrlHelper';
 import './AdminPanel.css';
 
 const AdminPanel = () => {
@@ -353,6 +354,8 @@ const AdminPanel = () => {
         </div>
       )}
 
+      <ImageUrlHelper />
+      
       <div className="projects-list">
         <h2>Existing Projects ({projects.length})</h2>
         <div style={{ marginBottom: '20px', padding: '15px', background: '#e9ecef', borderRadius: '4px', border: '1px solid #dee2e6' }}>

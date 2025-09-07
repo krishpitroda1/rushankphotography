@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProjectById } from '../firebase/projectService';
+import { processImageUrls, getImageWithFallback } from '../utils/imageUtils';
 import './ProjectDetail.css';
 
 const ProjectDetail = () => {
@@ -18,10 +19,11 @@ const ProjectDetail = () => {
         console.log('📋 Project data from Firebase:', projectData);
         
         // Validate and normalize project data
+        const processedPhotos = processImageUrls(projectData.photos || []);
         const normalizedProject = {
           ...projectData,
-          photos: projectData.photos || [],
-          image: projectData.image || projectData.photos?.[0] || ''
+          photos: processedPhotos,
+          image: getImageWithFallback(projectData.image || projectData.photos?.[0] || '')
         };
         
         setProject(normalizedProject);
@@ -34,10 +36,11 @@ const ProjectDetail = () => {
         const localProject = localProjects.find(p => p.id === id);
         if (localProject) {
           console.log('📦 Using local project data:', localProject);
+          const processedLocalPhotos = processImageUrls(localProject.photos || []);
           setProject({
             ...localProject,
-            photos: localProject.photos || [],
-            image: localProject.image || localProject.photos?.[0] || ''
+            photos: processedLocalPhotos,
+            image: getImageWithFallback(localProject.image || localProject.photos?.[0] || '')
           });
           setCurrentImageIndex(0); // Reset to first image
         } else {
@@ -47,10 +50,11 @@ const ProjectDetail = () => {
           const staticProject = allStaticProjects.find(p => p.id === id);
           if (staticProject) {
             console.log('📚 Using static project data:', staticProject);
+            const processedStaticPhotos = processImageUrls(staticProject.photos || []);
             setProject({
               ...staticProject,
-              photos: staticProject.photos || [],
-              image: staticProject.image || staticProject.photos?.[0] || ''
+              photos: processedStaticPhotos,
+              image: getImageWithFallback(staticProject.image || staticProject.photos?.[0] || '')
             });
             setCurrentImageIndex(0); // Reset to first image
           }
@@ -125,6 +129,10 @@ const ProjectDetail = () => {
                 src={project.photos[currentImageIndex] || project.image} 
                 alt={`${project.title} - ${currentImageIndex + 1}`}
                 className="main-image"
+                onError={(e) => {
+                  console.error('Main image failed to load:', project.photos[currentImageIndex] || project.image);
+                  e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIG5vdCBhdmFpbGFibGU8L3RleHQ+PC9zdmc+';
+                }}
               />
               
               {project.photos.length > 1 && (
@@ -151,6 +159,10 @@ const ProjectDetail = () => {
               src={project.image} 
               alt={project.title}
               className="main-image"
+              onError={(e) => {
+                console.error('Single image failed to load:', project.image);
+                e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIG5vdCBhdmFpbGFibGU8L3RleHQ+PC9zdmc+';
+              }}
             />
           )}
         </div>
@@ -164,6 +176,10 @@ const ProjectDetail = () => {
                 alt={`${project.title} thumbnail ${index + 1}`}
                 className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
                 onClick={() => goToImage(index)}
+                onError={(e) => {
+                  console.error('Thumbnail failed to load:', photo);
+                  e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
+                }}
               />
             ))}
           </div>
