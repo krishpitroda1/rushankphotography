@@ -121,16 +121,59 @@ src/
 
 ## Deployment
 
+### Option 1: GitHub Pages (Recommended)
+
+1. **Create GitHub Repository**
+   - Create a new repository on GitHub
+   - Update the `homepage` field in `package.json` with your GitHub username and repository name:
+     ```json
+     "homepage": "https://yourusername.github.io/your-repo-name"
+     ```
+
+2. **Push to GitHub**
+   ```bash
+   git remote add origin https://github.com/yourusername/your-repo-name.git
+   git branch -M main
+   git push -u origin main
+   ```
+
+3. **Deploy to GitHub Pages**
+   ```bash
+   npm run deploy
+   ```
+
+4. **Access Your Site**
+   Your site will be available at: `https://yourusername.github.io/your-repo-name`
+
+### Option 2: Vercel (Alternative)
+
+1. **Install Vercel CLI**
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Deploy**
+   ```bash
+   vercel
+   ```
+   Follow the prompts to deploy
+
+3. **Access Your Site**
+   Your site will be available at the provided Vercel URL
+
+### Option 3: Netlify
+
 1. **Build for Production**
    ```bash
    npm run build
    ```
 
-2. **Deploy to Your Preferred Platform**
-   - Netlify
-   - Vercel
-   - GitHub Pages
-   - Any static hosting service
+2. **Deploy**
+   - Drag and drop the `build` folder to [Netlify](https://netlify.com)
+   - Or connect your GitHub repository for automatic deployments
+
+3. **Access Your Site**
+   Your site will be available at the provided Netlify URL
 
 ## Browser Support
 
