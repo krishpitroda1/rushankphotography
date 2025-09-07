@@ -15,7 +15,8 @@ export const convertGoogleDriveUrl = (url) => {
   const fileMatch = url.match(/\/file\/d\/([a-zA-Z0-9-_]+)/);
   if (fileMatch) {
     const fileId = fileMatch[1];
-    return `https://drive.google.com/uc?export=view&id=${fileId}`;
+    // Prefer the thumbnail endpoint for reliable <img> embedding
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`;
   }
   
   // Handle Google Drive folder links (these won't work as direct images)
@@ -29,6 +30,17 @@ export const convertGoogleDriveUrl = (url) => {
   // Handle direct Google Drive image URLs
   // Format: https://drive.google.com/uc?export=view&id=FILE_ID
   if (url.includes('drive.google.com/uc?export=view')) {
+    // Try to extract id and convert to thumbnail to avoid occasional cookie-gated responses
+    const idMatch = url.match(/[?&]id=([a-zA-Z0-9-_]+)/);
+    if (idMatch) {
+      const fileId = idMatch[1];
+      return `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000`;
+    }
+    return url;
+  }
+  
+  // Already a thumbnail URL – allow through
+  if (url.includes('drive.google.com/thumbnail?id=')) {
     return url;
   }
   
