@@ -21,7 +21,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://yourusername.github.io/photography-portfolio",
+  "homepage": ".",
   "eslintConfig": {
     "extends": [
       "react-app",
