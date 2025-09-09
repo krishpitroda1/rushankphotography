@@ -1,10 +1,12 @@
 .page {
   min-height: 100vh;
-  background-color: #000;
+  background-color: #fff;
+  font-family: 'Times New Roman', serif;
+  padding-top: 80px;
 }
 
 .page-content {
-  padding: 100px 0 60px;
+  padding: 40px 20px 60px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -16,7 +18,16 @@
   margin-bottom: 60px;
   text-transform: uppercase;
   letter-spacing: 3px;
-  color: #fff;
+  color: #000;
+  font-family: 'Times New Roman', serif;
+}
+
+.loading-message {
+  text-align: center;
+  color: #000;
+  font-size: 1.2rem;
+  margin-top: 40px;
+  font-family: 'Times New Roman', serif;
 }
 
 @media (max-width: 768px) {

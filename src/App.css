@@ -1,6 +1,7 @@
 .App {
   min-height: 100vh;
-  background-color: #000;
+  background-color: #fff;
+  font-family: 'Times New Roman', serif;
 }
 
 /* Header Styles */
@@ -10,16 +11,17 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  background-color: rgba(0, 0, 0, 0.95);
+  background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #ddd;
   padding: 20px 0;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .header.scrolled {
   padding: 15px 0;
-  background-color: rgba(0, 0, 0, 0.98);
+  background-color: rgba(255, 255, 255, 0.98);
 }
 
 .header-content {
@@ -35,8 +37,9 @@
   font-size: 24px;
   font-weight: 600;
   letter-spacing: 2px;
-  color: #fff;
+  color: #000;
   text-transform: uppercase;
+  font-family: 'Times New Roman', serif;
 }
 
 .nav {
@@ -46,18 +49,19 @@
 }
 
 .nav a {
-  color: #ccc;
+  color: #333;
   font-weight: 400;
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 1px;
   transition: color 0.3s ease;
   position: relative;
+  font-family: 'Times New Roman', serif;
 }
 
 .nav a:hover,
 .nav a.active {
-  color: #fff;
+  color: #000;
 }
 
 .nav a::after {
@@ -67,7 +71,7 @@
   left: 0;
   width: 0;
   height: 1px;
-  background-color: #fff;
+  background-color: #000;
   transition: width 0.3s ease;
 }
 
@@ -80,7 +84,7 @@
   display: none;
   background: none;
   border: none;
-  color: #fff;
+  color: #000;
   font-size: 24px;
   cursor: pointer;
 }
@@ -89,6 +93,7 @@
 .main-content {
   padding-top: 80px;
   min-height: 100vh;
+  background-color: #fff;
 }
 
 /* Gallery Styles */
@@ -148,11 +153,12 @@
 }
 
 .gallery-title {
-  color: #fff;
+  color: #000;
   font-size: 16px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-family: 'Times New Roman', serif;
 }
 
 /* Hero Section */
@@ -162,7 +168,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: linear-gradient(135deg, #000 0%, #111 100%);
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
 
 .hero-content h1 {
@@ -171,13 +177,16 @@
   letter-spacing: 4px;
   margin-bottom: 20px;
   text-transform: uppercase;
+  color: #000;
+  font-family: 'Times New Roman', serif;
 }
 
 .hero-content p {
   font-size: 1.2rem;
-  color: #ccc;
+  color: #333;
   font-weight: 300;
   letter-spacing: 2px;
+  font-family: 'Times New Roman', serif;
 }
 
 /* Page Content */
@@ -185,6 +194,7 @@
   padding: 60px 20px;
   max-width: 1200px;
   margin: 0 auto;
+  background-color: #fff;
 }
 
 .page-title {
@@ -194,6 +204,8 @@
   margin-bottom: 60px;
   text-transform: uppercase;
   letter-spacing: 3px;
+  color: #000;
+  font-family: 'Times New Roman', serif;
 }
 
 /* About Page */
@@ -207,7 +219,8 @@
 .about-text {
   font-size: 1.1rem;
   line-height: 1.8;
-  color: #ccc;
+  color: #333;
+  font-family: 'Times New Roman', serif;
 }
 
 .about-image {
@@ -227,14 +240,16 @@
 .contact-info {
   font-size: 1.1rem;
   line-height: 1.8;
-  color: #ccc;
+  color: #333;
+  font-family: 'Times New Roman', serif;
 }
 
 .contact-info h3 {
-  color: #fff;
+  color: #000;
   margin-bottom: 20px;
   font-size: 1.5rem;
   font-weight: 500;
+  font-family: 'Times New Roman', serif;
 }
 
 .contact-form {
@@ -249,30 +264,31 @@
 }
 
 .form-group label {
-  color: #fff;
+  color: #000;
   margin-bottom: 8px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-size: 12px;
+  font-family: 'Times New Roman', serif;
 }
 
 .form-group input,
 .form-group textarea {
-  background: #111;
-  border: 1px solid #333;
-  color: #fff;
+  background: #fff;
+  border: 1px solid #ddd;
+  color: #000;
   padding: 15px;
   border-radius: 4px;
   font-size: 16px;
-  font-family: inherit;
+  font-family: 'Times New Roman', serif;
   transition: border-color 0.3s ease;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #fff;
+  border-color: #000;
 }
 
 .form-group textarea {
@@ -281,8 +297,8 @@
 }
 
 .submit-btn {
-  background: #fff;
-  color: #000;
+  background: #000;
+  color: #fff;
   border: none;
   padding: 15px 30px;
   font-size: 14px;
@@ -292,10 +308,11 @@
   cursor: pointer;
   transition: all 0.3s ease;
   align-self: flex-start;
+  font-family: 'Times New Roman', serif;
 }
 
 .submit-btn:hover {
-  background: #ccc;
+  background: #333;
   transform: translateY(-2px);
 }
 

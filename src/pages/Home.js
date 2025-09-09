@@ -18,8 +18,18 @@ const Home = () => {
         
         // Use Firebase projects if available, otherwise fallback to static data
         if (allProjects && allProjects.length > 0) {
-          setFeaturedProjects(allProjects.slice(0, 8));
-          console.log('✅ Using Firebase projects for featured work');
+          // Filter projects that are marked to show on main page
+          const mainPageProjects = allProjects.filter(project => project.showOnMainPage);
+          console.log('📋 Projects marked for main page:', mainPageProjects);
+          
+          if (mainPageProjects.length > 0) {
+            setFeaturedProjects(mainPageProjects.slice(0, 8));
+            console.log('✅ Using main page featured projects');
+          } else {
+            // If no projects are marked for main page, use first 8 projects
+            setFeaturedProjects(allProjects.slice(0, 8));
+            console.log('📋 No main page projects found, using first 8 projects');
+          }
         } else {
           setFeaturedProjects(commissionedWork.slice(0, 8));
           console.log('📦 Using static data as fallback');
