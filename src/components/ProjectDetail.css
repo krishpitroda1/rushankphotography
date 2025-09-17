@@ -42,8 +42,8 @@
 .navigation-buttons {
   position: absolute;
   right: 0;
-  top: 0;
-  bottom: 0;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -97,7 +97,7 @@
 
 .project-gallery {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 40px auto 0;
   position: relative;
 }
 
