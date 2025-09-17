@@ -24,10 +24,7 @@ const Header = () => {
     { path: '/contact', label: 'Contact' }
   ];
 
-  const isActive = (path) => {
-    if (path === '/commissioned-work' && location.pathname === '/') return true;
-    return location.pathname === path;
-  };
+  const isActive = (path) => location.pathname === path;
 
   return (
     <header className={`header ${isScrolled ? 'scrolled' : ''}`}>

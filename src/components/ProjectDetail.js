@@ -89,6 +89,30 @@ const ProjectDetail = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const handleClose = () => {
+    navigate(-1);
+  };
+
+  // Add keyboard navigation
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      } else if (e.key === 'ArrowLeft') {
+        prevImage();
+      } else if (e.key === 'ArrowRight') {
+        nextImage();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [project]);
+
   if (loading) {
     return (
       <div className="project-detail-loading">
@@ -112,9 +136,14 @@ const ProjectDetail = () => {
   return (
     <div className="project-detail">
       <div className="project-header">
-        <button onClick={() => navigate(-1)} className="back-button">
-          ← Back
-        </button>
+        <div className="navigation-buttons">
+          {/* <button onClick={handleBack} className="back-button">
+            ← Back
+          </button> */}
+          <button onClick={handleClose} className="close-button">
+            ✕ Close
+          </button>
+        </div>
         <h1 className="project-title">{project.title}</h1>
         {project.description && (
           <p className="project-description">{project.description}</p>

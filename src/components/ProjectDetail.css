@@ -32,23 +32,52 @@
 
 .project-header {
   margin-bottom: 30px;
-  text-align: center;
+  margin-top:100px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.back-button {
-  background: transparent;
-  border: 1px solid #fff;
+.navigation-buttons {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.back-button, .close-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid #fff;
   color: #fff;
-  padding: 10px 20px;
+  padding: 12px 24px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 20px;
+  font-weight: 600;
   transition: all 0.3s ease;
+  border-radius: 6px;
+  backdrop-filter: blur(10px);
+  min-width: 120px;
 }
 
-.back-button:hover {
+.back-button:hover, .close-button:hover {
   background: #fff;
   color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+.close-button {
+  background: rgba(220, 53, 69, 0.2);
+  border-color: #dc3545;
+}
+
+.close-button:hover {
+  background: #dc3545;
+  color: #fff;
 }
 
 .project-title {
@@ -175,6 +204,17 @@
     padding: 10px;
   }
   
+  .navigation-buttons {
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .back-button, .close-button {
+    padding: 10px 16px;
+    font-size: 14px;
+    min-width: 100px;
+  }
+  
   .project-title {
     font-size: 2rem;
   }
@@ -204,6 +244,18 @@
 }
 
 @media (max-width: 480px) {
+  .navigation-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .back-button, .close-button {
+    width: 100%;
+    max-width: 200px;
+    padding: 12px 20px;
+  }
+  
   .project-title {
     font-size: 1.5rem;
   }
