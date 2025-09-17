@@ -33,9 +33,6 @@ const Gallery = ({ items, title, category }) => {
             />
             <div className="gallery-overlay">
               <h3 className="gallery-item-title">{item.title}</h3>
-              {item.category && (
-                <span className="gallery-item-category">{item.category}</span>
-              )}
             </div>
           </div>
         ))}
