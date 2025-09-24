@@ -19,7 +19,7 @@ const Header = () => {
   const navItems = [
     { path: '/commissioned-work', label: 'Commissioned Work' },
     { path: '/personal', label: 'Personal' },
-    { path: '/headshots', label: 'Headshots' },
+    // { path: '/headshots', label: 'Headshots' },
     { path: '/about', label: 'About' },
     { path: '/contact', label: 'Contact' }
   ];

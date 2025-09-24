@@ -46,11 +46,11 @@ const Home = () => {
   if (loading) {
     return (
       <div className="home">
-        <section className="hero">
+        {/* <section className="hero">
           <div className="hero-content"> 
             <h1>Capturing moments that matter</h1>
-          </div>
-        </section>
+          </div> */}
+        {/* </section> */}
         <section className="main-content">
           <div className="featured-work">
             <h2 className="section-title">Featured Work</h2>
@@ -63,11 +63,11 @@ const Home = () => {
 
   return (
     <div className="home">
-      <section className="hero">
+      {/* <section className="hero">
         <div className="hero-content"> 
           <h1>Capturing moments that matter</h1>
         </div>
-      </section>
+      </section> */}
 
       <section className="main-content">
         <div className="featured-work">
