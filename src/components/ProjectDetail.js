@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getProjectById } from '../firebase/projectService';
 import { processImageUrls, getImageWithFallback } from '../utils/imageUtils';
@@ -67,35 +67,31 @@ const ProjectDetail = () => {
     fetchProject();
   }, [id]);
 
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     if (project && project.photos && project.photos.length > 0) {
       setCurrentImageIndex((prev) => 
         prev === project.photos.length - 1 ? 0 : prev + 1
       );
     }
-  };
+  }, [project]);
 
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
     if (project && project.photos && project.photos.length > 0) {
       setCurrentImageIndex((prev) => 
         prev === 0 ? project.photos.length - 1 : prev - 1
       );
     }
-  };
+  }, [project]);
 
-  const goToImage = (index) => {
+  const goToImage = useCallback((index) => {
     if (project && project.photos && project.photos.length > index) {
       setCurrentImageIndex(index);
     }
-  };
+  }, [project]);
 
-  const handleBack = () => {
+  const handleClose = useCallback(() => {
     navigate(-1);
-  };
-
-  const handleClose = () => {
-    navigate(-1);
-  };
+  }, [navigate]);
 
   // Add keyboard navigation
   useEffect(() => {
@@ -111,7 +107,7 @@ const ProjectDetail = () => {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [project]);
+  }, [handleClose, nextImage, prevImage]);
 
   if (loading) {
     return (
