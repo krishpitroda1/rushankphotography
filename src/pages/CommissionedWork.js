@@ -9,6 +9,9 @@ const CommissionedWork = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+    
     const fetchProjects = async () => {
       try {
         console.log('🔥 Fetching commissioned work from Firebase...');

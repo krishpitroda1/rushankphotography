@@ -22,6 +22,9 @@ const AdminPanel = () => {
   });
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+    
     // Check if user is already authenticated
     const authStatus = localStorage.getItem('adminAuthenticated');
     const loginTime = localStorage.getItem('adminLoginTime');
@@ -64,6 +67,8 @@ const AdminPanel = () => {
         localStorage.setItem('adminLoginTime', new Date().toISOString());
         await fetchProjects();
         setPassword('');
+        // Scroll to top after successful login
+        window.scrollTo(0, 0);
       } else {
         console.log('❌ Login failed - incorrect password');
         setLoginError('Incorrect password. Please try again.');
@@ -289,7 +294,9 @@ const AdminPanel = () => {
                   borderRadius: '4px',
                   fontSize: '16px',
                   boxSizing: 'border-box',
-                  opacity: isLoggingIn ? 0.7 : 1
+                  opacity: isLoggingIn ? 0.7 : 1,
+                  color: '#000',
+                  background: '#fff'
                 }}
                 placeholder="Enter admin password"
               />
@@ -353,6 +360,8 @@ const AdminPanel = () => {
           onClick={() => {
             console.log('Add project button clicked');
             setShowForm(true);
+            // Scroll to top when opening form
+            window.scrollTo(0, 0);
           }}
           style={{
             background: '#28a745',
@@ -502,7 +511,7 @@ const AdminPanel = () => {
                   value={formData.title}
                   onChange={handleInputChange}
                   required
-                  style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box', color: '#000', background: '#fff' }}
                 />
               </div>
 
@@ -514,7 +523,7 @@ const AdminPanel = () => {
                   value={formData.category}
                   onChange={handleInputChange}
                   required
-                  style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box', color: '#000', background: '#fff' }}
                 >
                   <option value="">Select Category</option>
                   <option value="Commissioned Work">Commissioned Work</option>
@@ -531,7 +540,7 @@ const AdminPanel = () => {
                   value={formData.image}
                   onChange={handleInputChange}
                   required
-                  style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box', color: '#000', background: '#fff' }}
                 />
               </div>
 
@@ -543,7 +552,7 @@ const AdminPanel = () => {
                   onChange={handlePhotosChange}
                   rows="5"
                   placeholder="Enter image URLs, one per line"
-                  style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box', resize: 'vertical' }}
+                  style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box', resize: 'vertical', color: '#000', background: '#fff' }}
                 />
               </div>
 

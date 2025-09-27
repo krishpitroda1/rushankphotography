@@ -40,6 +40,9 @@ const About = () => {
 
   // Ensure videos load at highest quality
   React.useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+    
     const setupVideoQuality = (video) => {
       if (video) {
         // Set video quality settings

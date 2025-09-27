@@ -9,6 +9,9 @@ const Headshots = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+    
     const fetchHeadshotProjects = async () => {
       try {
         console.log('🔥 Fetching Headshots projects from Firebase...');
