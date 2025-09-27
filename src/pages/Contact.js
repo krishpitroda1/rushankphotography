@@ -15,7 +15,7 @@ function ContactUs() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
               </svg>
             </div>
-            <h2 className="text-3xl font-bold text-white mb-4">Message Sent Successfully!</h2>
+            <h2 className="text-3xl font-bold text-black mb-4">Message Sent Successfully!</h2>
             <p className="text-lg text-gray-300">Thanks for your message! I'll get back to you within 48 hours.</p>
           </div>
           <a 
